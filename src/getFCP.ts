@@ -61,7 +61,7 @@ export const getFCP = (onReport: ReportHandler, reportAllChanges?: boolean) => {
     }
 
     onBFCacheRestore((event) => {
-      metric = initMetric('FCP');
+      metric = initMetric('FCP', {type: 'bfcache'});
       report = bindReporter(onReport, metric, reportAllChanges);
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {

@@ -49,7 +49,7 @@ export const getCLS = (onReport: ReportHandler, reportAllChanges?: boolean) => {
     }
   };
 
-  let metric = initMetric('CLS', 0);
+  let metric = initMetric('CLS', {value: 0});
   let report: ReturnType<typeof bindReporter>;
 
   let sessionValue = 0;
@@ -96,7 +96,7 @@ export const getCLS = (onReport: ReportHandler, reportAllChanges?: boolean) => {
     onBFCacheRestore(() => {
       sessionValue = 0;
       fcpValue = -1;
-      metric = initMetric('CLS', 0);
+      metric = initMetric('CLS', {value: 0, type: 'bfcache'});
       report = bindReporter(onReportWrapped, metric, reportAllChanges);
     });
   }

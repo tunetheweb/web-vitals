@@ -37,6 +37,9 @@ export interface Metric {
   // Any performance entries used in the metric value calculation.
   // Note, entries will be added to the array as the value changes.
   entries: (PerformanceEntry | FirstInputPolyfillEntry | NavigationTimingPolyfillEntry)[];
+
+  // The type of page visit associated with the metric.
+  type: 'navigate' | 'bfcache';
 }
 
 export interface ReportHandler {

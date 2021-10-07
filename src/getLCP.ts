@@ -69,7 +69,7 @@ export const getLCP = (onReport: ReportHandler, reportAllChanges?: boolean) => {
     onHidden(stopListening, true);
 
     onBFCacheRestore((event) => {
-      metric = initMetric('LCP');
+      metric = initMetric('LCP', {type: 'bfcache'});
       report = bindReporter(onReport, metric, reportAllChanges);
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {

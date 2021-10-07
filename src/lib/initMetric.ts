@@ -18,12 +18,19 @@ import {Metric} from '../types.js';
 import {generateUniqueID} from './generateUniqueID.js';
 
 
-export const initMetric = (name: Metric['name'], value?: number): Metric => {
+interface MetricInit {
+  type?: Metric['type']
+  value?: Metric['value']
+}
+
+export const initMetric = (name: Metric['name'], init?: MetricInit): Metric => {
+  const {type, value} = init || {};
   return {
     name,
     value: typeof value === 'undefined' ? -1 : value,
     delta: 0,
     entries: [],
-    id: generateUniqueID()
+    id: generateUniqueID(),
+    type: type || 'navigate',
   };
 };

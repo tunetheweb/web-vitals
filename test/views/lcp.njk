@@ -39,14 +39,11 @@
       console.log(lcp);
 
       // Elements can't be serialized, so we convert first.
-      lcp = {
-        ...lcp,
-        entries: lcp.entries.map((e) => ({
-          element: e.element.nodeName.toLowerCase(),
-          size: e.size,
-          startTime: e.startTime,
-        })),
-      };
+      lcp.entries = lcp.entries.map((e) => ({
+        element: e.element.nodeName.toLowerCase(),
+        size: e.size,
+        startTime: e.startTime,
+      }));
 
       // Test sending the metric to an analytics endpoint.
       navigator.sendBeacon(`/collect`, JSON.stringify(lcp));

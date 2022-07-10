@@ -12,8 +12,8 @@
   - [Send the results to Google Analytics](#send-the-results-to-google-analytics)
   - [Send the results to Google Tag Manager](#send-the-results-to-google-tag-manager)
   - [Batch multiple reports together](#batch-multiple-reports-together)
-- [Bundle versions](#bundle-versions)
-  - [Which bundle is right for you?](#which-bundle-is-right-for-you)
+- [Build options](#build-options)
+  - [Which build is right for you?](#which-build-is-right-for-you)
   - [How the polyfill works](#how-the-polyfill-works)
 - [API](#api)
   - [Types](#types)
@@ -64,13 +64,13 @@ npm install web-vitals
 
 _**Note:** If you're not using npm, you can still load `web-vitals` via `<script>` tags from a CDN like [unpkg.com](https://unpkg.com). See the [load `web-vitals` from a CDN](#load-web-vitals-from-a-cdn) usage example below for details._
 
-There are two different versions of the `web-vitals` library (the "standard" version and the "base+polyfill" version), and how you load the library depends on which version you want to use.
+There are a few different builds of the `web-vitals` library, and how you load the library depends on which build you want to use.
 
-For details on the difference between the two versions, see <a href="#which-bundle-is-right-for-you">which bundle is right for you</a>.
+For details on the difference between the builds, see <a href="#which-build-is-right-for-you">which build is right for you</a>.
 
-**1. The "standard" version**
+**1. The "standard" build**
 
-To load the "standard" version, import modules from the `web-vitals` package in your application code (as you would with any npm package and node-based build tool):
+To load the "standard" build, import modules from the `web-vitals` package in your application code (as you would with any npm package and node-based build tool):
 
 ```js
 import {onLCP, onFID, onCLS} from 'web-vitals';
@@ -82,11 +82,32 @@ onLCP(console.log);
 
 _**Note:** in version 2, these functioned were named `getXXX()` rather than `onXXX()`. They've [been renamed](https://github.com/GoogleChrome/web-vitals/pull/222) in version 3 to reduce confusion (see [#217](https://github.com/GoogleChrome/web-vitals/pull/217) for details) and will continue to be available using the `getXXX()` until at least version 4. Users are encouraged to switch to the new names, though, for future compatibility._
 
+<a name="attribution-build"><a>
+
+**3. The "attribution" build**
+
+Measuring the Web Vitals scores for your real users is a great first step toward optimizing the user experience. But if your scores aren't _good_, the next step is to understand why they're not good and work to improve them.
+
+The "attribution" build helps you do that by including additional diagnostic information with each metric to help you identify the root cause of poor performance as well as prioritize the most important things to fix. See [Debug Web Vitals in the field](https://web.dev/debug-web-vitals-in-the-field/) for additional guidance on this technique.
+
+To load the "attribution" build, change any `import` statements that reference `web-vitals` to `web-vitals/attribution`:
+
+```diff
+- import {onLCP, onFID, onCLS} from 'web-vitals';
++ import {onLCP, onFID, onCLS} from 'web-vitals/attribution';
+```
+
+Usage for each of the imported function is identical to the standard build, but when importing from the attribution build, the [`Metric`](#metric) object will contain an additional [`attribution`](#metricwithattribution) property.
+
+See the [`attribution` reference](#attribution) for details on what values are added for each metric.
+
 <a name="how-to-use-the-polyfill"><a>
 
-**2. The "base+polyfill" version**
+**3. The "base+polyfill" build**
 
-Loading the "base+polyfill" version is a two-step process:
+_**⚠️ Warning ⚠️** the "base+polyfill" build is deprecated. See [#238](https://github.com/GoogleChrome/web-vitals/issues/238) for details._
+
+Loading the "base+polyfill" build is a two-step process:
 
 First, in your application code, import the "base" build rather than the "standard" build. To do this, change any `import` statements that reference `web-vitals` to `web-vitals/base`:
 
@@ -111,28 +132,21 @@ Then, inline the code from `dist/polyfill.js` into the `<head>` of your pages. T
 </html>
 ```
 
-Note that the code _must_ go in the `<head>` of your pages in order to work. See [how the polyfill works](#how-the-polyfill-works) for more details.
+It's important that the code is inlined directly into the HTML. *Do not link to an external script file, as that will negatively affect performance:
 
-_**Tip:** while it's certainly possible to inline the code in `dist/polyfill.js` by copy and pasting it directly into your templates, it's better to automate this process in a build step—otherwise you risk the "base" and the "polyfill" scripts getting out of sync when new versions are released._
+```html
+<!-- GOOD -->
+<script>
+  // Inline code from `dist/polyfill.js` here
+</script>
 
-<a name="attribution-build"><a>
-
-**3. The "attribution" build**
-
-Measuring the Web Vitals scores for your real users is a great first step toward optimizing the user experience. But if your scores aren't _good_, the next step is to understand why they're not good and work to improve them.
-
-The "attribution" build helps you do that by including additional diagnostic information with each metric to help you identify the root cause of poor performance as well as prioritize the most important things to fix.
-
-To load the "attribution" build, change any `import` statements that reference `web-vitals` to `web-vitals/attribution`:
-
-```diff
-- import {onLCP, onFID, onCLS} from 'web-vitals';
-+ import {onLCP, onFID, onCLS} from 'web-vitals/attribution';
+<!-- BAD! DO NOT DO! -->
+<script src="/path/to/polyfill.js"></script>
 ```
 
-Usage for each of the imported function is identical to the standard build, but when importing from the attribution build, the [`Metric`](#metric) object will contain an additional [`attribution`](#metricwithattribution) property.
+Also note that the code _must_ go in the `<head>` of your pages in order to work. See [how the polyfill works](#how-the-polyfill-works) for more details.
 
-See the [`attribution` reference](#attribution) for details on what values are added for each metric.
+_**Tip:** while it's certainly possible to inline the code in `dist/polyfill.js` by copy and pasting it directly into your templates, it's better to automate this process in a build step—otherwise you risk the "base" and the "polyfill" scripts getting out of sync when new versions are released._
 
 <a name="load-web-vitals-from-a-cdn"><a>
 
@@ -140,11 +154,11 @@ See the [`attribution` reference](#attribution) for details on what values are a
 
 The recommended way to use the `web-vitals` package is to install it from npm and integrate it into your build process. However, if you're not using npm, it's still possible to use `web-vitals` by requesting it from a CDN that serves npm package files.
 
-The following examples show how to load `web-vitals` from [unpkg.com](https://unpkg.com), whether your targeting just Chromium-based browsers (using the "standard" version) or additional browsers (using the "base+polyfill" version):
+The following examples show how to load `web-vitals` from [unpkg.com](https://unpkg.com):
 
 _**Important!** users who want to load version 3 beta from the unpkg CDN should specify a version number or link to the [web-vitals@next](https://unpkg.com/web-vitals@next?module) tag._
 
-**Load the "standard" version** _(using a module script)_
+**Load the "standard" build** _(using a module script)_
 
 ```html
 <!-- Append the `?module` param to load the module version of `web-vitals` -->
@@ -157,7 +171,7 @@ _**Important!** users who want to load version 3 beta from the unpkg CDN should 
 </script>
 ```
 
-**Load the "standard" version** _(using a classic script)_
+**Load the "standard" build** _(using a classic script)_
 
 ```html
 <script>
@@ -176,35 +190,36 @@ _**Important!** users who want to load version 3 beta from the unpkg CDN should 
 </script>
 ```
 
-**Load the "base+polyfill" version** _(using a classic script)_
+**Load the "attribution" build** _(using a module script)_
 
 ```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <script>
-      // Inline code from `https://unpkg.com/web-vitals/dist/polyfill.js` here.
-    </script>
-  </head>
-  <body>
-    ...
-    <!-- Load the UMD version of the "base" bundle. -->
-    <script>
-    (function() {
-      var script = document.createElement('script');
-      script.src = 'https://unpkg.com/web-vitals/dist/web-vitals.base.iife.js';
-      script.onload = function() {
-        // When loading `web-vitals` using a classic script, all the public
-        // methods can be found on the `webVitals` global namespace.
-        webVitals.onCLS(console.log);
-        webVitals.onFID(console.log);
-        webVitals.onLCP(console.log);
-      }
-      document.head.appendChild(script);
-    }())
-    </script>
-  </body>
-</html>
+<!-- Append the `?module` param to load the module version of `web-vitals` -->
+<script type="module">
+  import {onCLS, onFID, onLCP} from 'https://unpkg.com/web-vitals/dist/web-vitals.attribution.js?module';
+
+  onCLS(console.log);
+  onFID(console.log);
+  onLCP(console.log);
+</script>
+```
+
+**Load the "attribution" build** _(using a classic script)_
+
+```html
+<script>
+(function() {
+  var script = document.createElement('script');
+  script.src = 'https://unpkg.com/web-vitals/dist/web-vitals.attribution.iife.js';
+  script.onload = function() {
+    // When loading `web-vitals` using a classic script, all the public
+    // methods can be found on the `webVitals` global namespace.
+    webVitals.onCLS(console.log);
+    webVitals.onFID(console.log);
+    webVitals.onLCP(console.log);
+  }
+  document.head.appendChild(script);
+}())
+</script>
 ```
 
 ## Usage
@@ -215,7 +230,7 @@ Each of the Web Vitals metrics is exposed as a single function that takes a `cal
 
 The following example measures each of the Core Web Vitals metrics and logs the result to the console once its value is ready to report.
 
-_(The examples below import the "standard" version, but they will work with the polyfill version as well.)_
+_(The examples below import the "standard" build, but they will work with the "attribution" build as well.)_
 
 ```js
 import {onCLS, onFID, onLCP} from 'web-vitals';
@@ -469,11 +484,13 @@ addEventListener('pagehide', flushQueue);
 
 _**Note:** see [the Page Lifecycle guide](https://developers.google.com/web/updates/2018/07/page-lifecycle-api#legacy-lifecycle-apis-to-avoid) for an explanation of why `visibilitychange` and `pagehide` are recommended over events like `beforeunload` and `unload`._
 
-## Bundle versions
+<a name="bundle-versions"><a>
 
-The `web-vitals` package includes builds for both the "standard" and "base+polyfill" versions, as well as different formats of each to allow developers to choose the format that best meets their needs or integrates with their architecture.
+## Build options
 
-The following table lists all the bundles distributed with the `web-vitals` package on npm.
+The `web-vitals` package includes builds for the "standard", "attribution", and "base+polyfill" ([deprecated](https://github.com/GoogleChrome/web-vitals/issues/238)) builds, as well as different formats of each to allow developers to choose the format that best meets their needs or integrates with their architecture.
+
+The following table lists all the builds distributed with the `web-vitals` package on npm.
 
 <table>
   <tr>
@@ -488,7 +505,7 @@ The following table lists all the bundles distributed with the `web-vitals` pack
     <td><code>pkg.module</code></td>
     <td>
       <p>An ES module bundle of all metric functions, without any attribution features.</p>
-      This is the "standard" version and is the simplest way to consume this library out of the box.
+      This is the "standard" build and is the simplest way to consume this library out of the box.
     </td>
   </tr>
   <tr>
@@ -509,14 +526,14 @@ The following table lists all the bundles distributed with the `web-vitals` pack
     <td><code>web-vitals.attribution.js</code></td>
     <td>--</td>
     <td>
-      An ES module bundle of all metric functions that includes <a href="#attribution-build">attribution</a> features.
+      An ES module version of all metric functions that includes <a href="#attribution-build">attribution</a> features.
     </td>
   </tr>
     <tr>
     <td><code>web-vitals.attribution.umd.js</code></td>
     <td>--</td>
     <td>
-      A UMD version of the <code>web-vitals.attribution.js</code> bundle (exposed on the <code>window.webVitals.*</code> namespace).
+      A UMD version of the <code>web-vitals.attribution.js</code> build (exposed on the <code>window.webVitals.*</code> namespace).
     </td>
   </tr>
   </tr>
@@ -524,13 +541,14 @@ The following table lists all the bundles distributed with the `web-vitals` pack
     <td><code>web-vitals.attribution.iife.js</code></td>
     <td>--</td>
     <td>
-      An IIFE version of the <code>web-vitals.attribution.js</code> bundle (exposed on the <code>window.webVitals.*</code> namespace).
+      An IIFE version of the <code>web-vitals.attribution.js</code> build (exposed on the <code>window.webVitals.*</code> namespace).
     </td>
   </tr>
   <tr>
     <td><code>web-vitals.base.js</code></td>
     <td>--</td>
     <td>
+      <p><strong>This build has been <a href="https://github.com/GoogleChrome/web-vitals/issues/238">deprecated</a>.</strong></p>
       <p>An ES module bundle containing just the "base" part of the "base+polyfill" version.</p>
       Use this bundle if (and only if) you've also added the <code>polyfill.js</code> script to the <code>&lt;head&gt;</code> of your pages. See <a href="#how-to-use-the-polyfill">how to use the polyfill</a> for more details.
     </td>
@@ -539,7 +557,8 @@ The following table lists all the bundles distributed with the `web-vitals` pack
     <td><code>web-vitals.base.umd.js</code></td>
     <td>--</td>
     <td>
-      A UMD version of the <code>web-vitals.base.js</code> bundle (exposed on the <code>window.webVitals.*</code> namespace).
+      <p><strong>This build has been <a href="https://github.com/GoogleChrome/web-vitals/issues/238">deprecated</a>.</strong></p>
+      <p>A UMD version of the <code>web-vitals.base.js</code> bundle (exposed on the <code>window.webVitals.*</code> namespace).</p>
     </td>
   </tr>
   </tr>
@@ -547,35 +566,40 @@ The following table lists all the bundles distributed with the `web-vitals` pack
     <td><code>web-vitals.base.iife.js</code></td>
     <td>--</td>
     <td>
-      An IIFE version of the <code>web-vitals.base.js</code> bundle (exposed on the <code>window.webVitals.*</code> namespace).
+      <p><strong>This build has been <a href="https://github.com/GoogleChrome/web-vitals/issues/238">deprecated</a>.</strong></p>
+      <p>An IIFE version of the <code>web-vitals.base.js</code> bundle (exposed on the <code>window.webVitals.*</code> namespace).</p>
     </td>
   </tr>
   <tr>
     <td><code>polyfill.js</code></td>
     <td>--</td>
     <td>
+      <p><strong>This build has been <a href="https://github.com/GoogleChrome/web-vitals/issues/238">deprecated</a>.</strong></p>
       <p>The "polyfill" part of the "base+polyfill" version. This script should be used with either <code>web-vitals.base.js</code>, <code>web-vitals.base.umd.js</code>, or <code>web-vitals.base.iife.js</code> (it will not work with any script that doesn't have "base" in the filename).</p>
       See <a href="#how-to-use-the-polyfill">how to use the polyfill</a> for more details.
     </td>
   </tr>
 </table>
 
-### Which bundle is right for you?
+<a name="which-build-is-right-for-you"><a>
 
-Most developers will generally want to use either the "standard" bundle or the "attribution" bundle (via either the ES module or UMD version, depending on your build system), as they're the easiest to use out of the box and integrate into existing build tools.
+### Which build is right for you?
 
-However, there are a few good reasons to consider using the "base+polyfill" version, for example:
+Most developers will generally want to use "standard" build (via either the ES module or UMD version, depending on your bundler/build system), as it's the easiest to use out of the box and integrate into existing tools.
 
-- FID can be measured in all browsers.
-- CLS, FCP, FID, and LCP will be more accurate in some cases (since the polyfill detects the page's initial `visibilityState` earlier).
+However, if you'd lke to collect additional debug information to help you diagnose performance bottlenecks based on real-user issues, use the ["attribution" build](#attribution-build).
+
+For guidance on how to collect and use real-user data to debug performance issues, see [Debug Web Vitals in the field](https://web.dev/debug-web-vitals-in-the-field/).
 
 ### How the polyfill works
+
+_**⚠️ Warning ⚠️** the "base+polyfill" build is deprecated. See [#238](https://github.com/GoogleChrome/web-vitals/issues/238) for details._
 
 The `polyfill.js` script adds event listeners (to track FID cross-browser), and it records initial page visibility state as well as the timestamp of the first visibility change to hidden (to improve the accuracy of CLS, FCP, LCP, and FID).
 
 In order for it to work properly, the script must be the first script added to the page, and it must run before the browser renders any content to the screen. This is why it needs to be added to the `<head>` of the document.
 
-The "standard" version of the `web-vitals` library includes some of the same logic found in `polyfill.js`. To avoid duplicating that code when using the "base+polyfill" version, the `web-vitals.base.js` bundle does not include any polyfill logic, instead it coordinates with the code in `polyfill.js`, which is why the two scripts must be used together.
+The "standard" build of the `web-vitals` library includes some of the same logic found in `polyfill.js`. To avoid duplicating that code when using the "base+polyfill" build, the `web-vitals.base.js` bundle does not include any polyfill logic, instead it coordinates with the code in `polyfill.js`, which is why the two scripts must be used together.
 
 ## API
 

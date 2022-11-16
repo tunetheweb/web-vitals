@@ -25,7 +25,7 @@ import {stubVisibilityChange} from '../utils/stubVisibilityChange.js';
 
 describe('onLCP()', async function() {
   // Retry all tests in this suite up to 2 times.
-  this.retries(2);
+  // this.retries(2);
 
   let browserSupportsLCP;
   before(async function() {

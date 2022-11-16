@@ -24,7 +24,7 @@ import {stubVisibilityChange} from '../utils/stubVisibilityChange.js';
 
 describe('onFCP()', async function() {
   // Retry all tests in this suite up to 2 times.
-  this.retries(2);
+  // this.retries(2);
 
   let browserSupportsFCP;
   before(async function() {

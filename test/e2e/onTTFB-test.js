@@ -57,7 +57,7 @@ function assertValidEntry(entry) {
 
 describe('onTTFB()', async function() {
   // Retry all tests in this suite up to 2 times.
-  // this.retries(2);
+  this.retries(2);
 
   beforeEach(async function() {
     await clearBeacons();

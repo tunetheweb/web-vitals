@@ -24,7 +24,7 @@ import {stubVisibilityChange} from '../utils/stubVisibilityChange.js';
 
 describe('onFID()', async function() {
   // Retry all tests in this suite up to 2 times.
-  // this.retries(2);
+  this.retries(2);
 
   let browserSupportsFID;
   before(async function() {

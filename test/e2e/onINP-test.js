@@ -27,7 +27,7 @@ const ROUNDING_ERROR = 8;
 
 describe('onINP()', async function() {
   // Retry all tests in this suite up to 2 times.
-  // this.retries(2);
+  this.retries(2);
 
   let browserSupportsINP;
   before(async function() {

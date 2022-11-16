@@ -83,16 +83,16 @@ module.exports.config = {
         // binary: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
       },
     },
-    // {
-    //   browserName: 'firefox',
-    //   maxInstances: 1,
-    //   pageLoadStrategy: 'none',
-    // },
-    // {
-    //   browserName: 'safari',
-    //   maxInstances: 1,
-    //   pageLoadStrategy: 'none',
-    // },
+    {
+      browserName: 'firefox',
+      maxInstances: 1,
+      pageLoadStrategy: 'none',
+    },
+    {
+      browserName: 'safari',
+      maxInstances: 1,
+      pageLoadStrategy: 'none',
+    },
   ],
   //
   // ===================
@@ -141,8 +141,7 @@ module.exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  // services: ['selenium-standalone'],
-  services: ['chromedriver'],
+  services: ['selenium-standalone'],
   // NOTE(philipwalton): use `chromedriver` for faster chrome-only testing.
   // services: ['chromedriver'],
   //

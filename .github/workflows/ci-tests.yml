@@ -19,4 +19,5 @@ jobs:
       - name: Run tests
         run: |
           npm install
-          npm run test
+          npm run test:server &
+          ./node_modules/@wdio/cli/bin/wdio.js wdio.conf.ci.cjs

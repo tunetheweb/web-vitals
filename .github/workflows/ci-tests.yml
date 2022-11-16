@@ -20,4 +20,4 @@ jobs:
         run: |
           npm install
           npm run test:server &
-          ./node_modules/@wdio/cli/bin/wdio.js wdio.conf.ci.cjs
+          ./node_modules/@wdio/cli/bin/wdio.js wdio.conf.cjs wdio.conf.ci.cjs

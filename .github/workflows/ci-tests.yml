@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Run e2e tests
-    runs-on: 	macos-latest
+    runs-on: 	windows-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -19,6 +19,4 @@ jobs:
       - name: Run tests
         run: |
           npm install
-          npm run test:server &
-          sleep 10
-          npm run test:e2e
+          npm run test

@@ -33,6 +33,10 @@ module.exports.config = {
         // binary: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
       },
     },
+    {
+      browserName: 'firefox',
+      maxInstances: 1,
+      pageLoadStrategy: 'none',
+    },
   ],
-  services: ['chromedriver'],
 };

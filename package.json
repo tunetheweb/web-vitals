@@ -103,6 +103,8 @@
     "release:minor": "npm version minor -m 'Release v%s' && npm publish",
     "release:patch": "npm version patch -m 'Release v%s' && npm publish",
     "test": "npm-run-all build -p -r test:*",
+    "testci": "npm-run-all build -p -r test:server test:ci",
+    "test:ci": "wdio wdio.conf.cjs wdio.conf.ci.cjs",
     "test:e2e": "wdio wdio.conf.cjs",
     "test:server": "node test/server.js",
     "start": "run-s build:ts test:server watch",

@@ -78,16 +78,17 @@ module.exports.config = {
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
       'goog:chromeOptions': {
+        'args': ['headless'],
         'excludeSwitches': ['enable-automation'],
         // Uncomment to test on Chrome Canary.
         // binary: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
       },
     },
-    // {
-    //   browserName: 'firefox',
-    //   maxInstances: 1,
-    //   pageLoadStrategy: 'none',
-    // },
+    {
+      browserName: 'firefox',
+      maxInstances: 1,
+      pageLoadStrategy: 'none',
+    },
     // {
     //   browserName: 'safari',
     //   maxInstances: 1,

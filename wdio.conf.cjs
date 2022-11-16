@@ -78,7 +78,6 @@ module.exports.config = {
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
       'goog:chromeOptions': {
-        'args': ['headless'],
         'excludeSwitches': ['enable-automation'],
         // Uncomment to test on Chrome Canary.
         // binary: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'

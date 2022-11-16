@@ -20,5 +20,5 @@ jobs:
         run: |
           npm install
           npm run test:server &
-          sleep 100
+          sleep 10
           npm run test:e2e
